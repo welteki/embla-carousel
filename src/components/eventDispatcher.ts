@@ -1,14 +1,15 @@
 type Subscribers = { [key in Event]: Callback[] }
-export type Callback = () => void
+export type Callback = (...args: any[]) => void
 export type Event =
   | 'init'
   | 'select'
+  | 'scroll'
   | 'dragStart'
   | 'dragEnd'
   | 'destroy'
 
 export type EventDispatcher = {
-  dispatch: (evt: Event) => EventDispatcher
+  dispatch: (evt: Event, ...args: any[]) => EventDispatcher
   on: (evt: Event, cb: Callback) => EventDispatcher
   off: (evt: Event, cb: Callback) => EventDispatcher
 }
@@ -19,12 +20,13 @@ export function EventDispatcher(): EventDispatcher {
     dragEnd: [],
     dragStart: [],
     init: [],
+    scroll: [],
     select: [],
   }
 
-  function dispatch(evt: Event): EventDispatcher {
+  function dispatch(evt: Event, ...args: any[]): EventDispatcher {
     const eventListeners = subscribers[evt]
-    eventListeners.forEach(e => e())
+    eventListeners.forEach(e => e(...args))
     return self
   }
 

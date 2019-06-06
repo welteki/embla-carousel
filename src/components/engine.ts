@@ -88,6 +88,12 @@ export function Engine(
       ? pointer.direction.get()
       : slider.mover.direction.get()
 
+  // Position
+  const position = (): number => {
+    const currentPos = slider.mover.location.get() - alignSizes[0]
+    return (currentPos / (min - alignSizes[0])) * 100
+  }
+
   // Draw
   const update = (): void => {
     if (!pointer.isDown()) {
@@ -105,6 +111,7 @@ export function Engine(
       slider.shifter.shiftInfinite(slides)
     }
     slider.translate.to(slider.mover.location).useType('x3d')
+    events.dispatch('scroll', position(), direction())
     slider.animation.proceed()
   }
 
